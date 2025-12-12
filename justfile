@@ -12,7 +12,7 @@ format:
 
 hlint:
   #!/usr/bin/env bash
-  hlint app src test
+  hlint src test
 
 build:
     #!/usr/bin/env bash

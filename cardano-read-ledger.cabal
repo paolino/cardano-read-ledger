@@ -20,10 +20,6 @@ description:
   we instead recommend that you use
   types that are specific to the current (and the upcoming) era.
 
-  The source code for this package also contains a partial,
-  preliminary axiomatization of these types using
-  [agda2hs](https://github.com/agda/agda2hs).
-
 license:         Apache-2.0
 license-file:    LICENSE
 author:          Cardano Foundation (High Assurance Lab)
@@ -31,7 +27,6 @@ maintainer:      hal@cardanofoundation.org
 copyright:       2023-2025 Cardano Foundation
 category:        Cardano
 build-type:      Simple
-tested-with:     GHC ==9.6.6
 extra-doc-files: CHANGELOG.md
 
 common settings

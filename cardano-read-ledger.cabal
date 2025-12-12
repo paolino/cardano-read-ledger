@@ -129,7 +129,7 @@ library
     , cardano-crypto-wrapper
     , cardano-ledger-allegra
     , cardano-ledger-alonzo
-    , cardano-ledger-api
+    , cardano-ledger-api            ^>=1.11
     , cardano-ledger-babbage
     , cardano-ledger-binary
     , cardano-ledger-byron

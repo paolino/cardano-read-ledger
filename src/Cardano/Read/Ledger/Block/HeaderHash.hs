@@ -18,6 +18,8 @@ import Prelude
 
 import Cardano.Crypto.Hashing qualified as Byron
 
+import Cardano.Ledger.Binary (EncCBOR, EncCBORGroup)
+import Cardano.Ledger.Core qualified as Core
 import Cardano.Ledger.Hashes
     ( EraIndependentBlockHeader
     )
@@ -62,6 +64,9 @@ import Ouroboros.Consensus.Shelley.Ledger
     ( ShelleyHash (unShelleyHash)
     )
 import Ouroboros.Consensus.Shelley.Ledger.Block qualified as O
+import Ouroboros.Consensus.Shelley.Protocol.Abstract
+    ( ShelleyProtocolHeader
+    )
 import Ouroboros.Consensus.Shelley.Protocol.Abstract qualified as Shelley
 import Ouroboros.Consensus.Shelley.Protocol.Praos
     (
@@ -101,7 +106,11 @@ getEraHeaderHash = case theEra @era of
     Conway -> \(Block block) -> HeaderHash $ getHeaderHashShelley block
 
 getHeaderHashShelley
-    :: (Shelley.ProtocolHeaderSupportsEnvelope (praos StandardCrypto))
+    :: ( Shelley.ProtocolHeaderSupportsEnvelope (praos StandardCrypto)
+       , Core.Era era
+       , EncCBORGroup (Core.TxSeq era)
+       , EncCBOR (ShelleyProtocolHeader (praos StandardCrypto))
+       )
     => O.ShelleyBlock (praos StandardCrypto) era
     -> ShelleyHash
 getHeaderHashShelley
@@ -154,7 +163,11 @@ type family PrevHeaderHashT era where
 newtype PrevHeaderHash era = PrevHeaderHash (PrevHeaderHashT era)
 
 getPrevHeaderHashShelley
-    :: (Shelley.ProtocolHeaderSupportsEnvelope proto)
+    :: ( Shelley.ProtocolHeaderSupportsEnvelope proto
+       , Core.Era era
+       , EncCBORGroup (Core.TxSeq era)
+       , EncCBOR (ShelleyProtocolHeader proto)
+       )
     => O.ShelleyBlock proto era
     -> PrevHash
 getPrevHeaderHashShelley (O.ShelleyBlock (Shelley.Block header _) _) =

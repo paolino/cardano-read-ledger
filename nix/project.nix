@@ -1,4 +1,4 @@
-{ CHaP, indexState, pkgs, ... }:
+{ CHaP, indexState, pkgs, mkdocs, asciinema, ... }:
 
 let
   indexTool = { index-state = indexState; };
@@ -22,6 +22,13 @@ let
     buildInputs = with pkgs; [
       just
       nixfmt-classic
+      pkgs.mkdocs
+      mkdocs.from-nixpkgs
+      mkdocs.asciinema-plugin
+      mkdocs.markdown-callouts
+      asciinema.compress
+      asciinema.resize
+      pkgs.asciinema
     ];
     shellHook = ''
       echo "Entering shell for cardano-read-ledger development"

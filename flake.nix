@@ -18,10 +18,12 @@
       url = "github:intersectmbo/cardano-haskell-packages?ref=repo";
       flake = false;
     };
+    mkdocs.url = "github:paolino/dev-assets?dir=mkdocs";
+    asciinema.url = "github:paolino/dev-assets?dir=asciinema";
   };
 
   outputs = inputs@{ self, nixpkgs, flake-parts, haskellNix, CHaP, iohkNix
-    , ... }:
+    , mkdocs, asciinema, ... }:
     let
       version = self.dirtyShortRev or self.shortRev;
       parts = flake-parts.lib.mkFlake { inherit inputs; } {
@@ -40,12 +42,13 @@
             project = pkgs.callPackage ./nix/project.nix {
               inherit CHaP;
               indexState = "2025-08-07T00:00:00Z";
+              mkdocs = mkdocs.packages.${system};
+              asciinema = asciinema.packages.${system};
             };
 
           in rec {
             packages = {
-              inherit (project.packages)
-                cardano-read-ledger-tests;
+              inherit (project.packages) cardano-read-ledger-tests;
             };
             inherit (project) devShells;
           };

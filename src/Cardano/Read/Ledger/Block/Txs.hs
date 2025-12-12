@@ -12,12 +12,7 @@ import Prelude
 import Cardano.Chain.Block qualified as Byron
 import Cardano.Chain.UTxO qualified as Byron
 import Cardano.Ledger.Api qualified as Ledger
-import Cardano.Ledger.Binary
-    ( EncCBOR
-    )
-import Cardano.Ledger.Core
-    ( EraSegWits (..)
-    )
+import Cardano.Ledger.Core (EraBlockBody (txSeqBlockBodyL))
 import Cardano.Ledger.Shelley.API qualified as Shelley
 import Cardano.Read.Ledger.Block.Block
     ( Block (..)
@@ -31,15 +26,13 @@ import Cardano.Read.Ledger.Tx.Tx
     ( Tx (..)
     , TxT
     )
+import Control.Lens ((^.))
 import Data.Foldable
     ( toList
     )
 import Ouroboros.Consensus.Byron.Ledger qualified as Byron
 import Ouroboros.Consensus.Byron.Ledger qualified as O
 import Ouroboros.Consensus.Shelley.Ledger qualified as O
-import Ouroboros.Consensus.Shelley.Protocol.Abstract
-    ( ShelleyProtocolHeader
-    )
 import Ouroboros.Consensus.Shelley.Protocol.Praos
     (
     )
@@ -69,8 +62,8 @@ getTxsFromBlockByron block =
         Byron.ABOBBoundary _ -> []
 
 getTxsFromBlockShelleyAndOn
-    :: (EraSegWits era, EncCBOR (ShelleyProtocolHeader proto))
+    :: (EraBlockBody era)
     => O.ShelleyBlock proto era
     -> [Ledger.Tx era]
 getTxsFromBlockShelleyAndOn (O.ShelleyBlock (Shelley.Block _ txs) _) =
-    toList (fromTxSeq txs)
+    toList (txs ^. txSeqBlockBodyL)

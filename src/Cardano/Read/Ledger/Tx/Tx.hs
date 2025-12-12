@@ -14,12 +14,7 @@ module Cardano.Read.Ledger.Tx.Tx
 import Prelude
 
 import Cardano.Chain.UTxO qualified as Byron
-import Cardano.Ledger.Alonzo.Tx
-    ( AlonzoTx
-    )
-import Cardano.Ledger.Shelley.Tx
-    ( ShelleyTx
-    )
+import Cardano.Ledger.Core qualified as Core
 import Cardano.Read.Ledger.Eras
     ( Allegra
     , Alonzo
@@ -33,15 +28,16 @@ import Cardano.Read.Ledger.Eras
 -- | Closed type family returning the ledger 'Tx' type for each known @era@.
 type family TxT era where
     TxT Byron = Byron.ATxAux ()
-    TxT Shelley = ShelleyTx Shelley
-    TxT Allegra = ShelleyTx Allegra
-    TxT Mary = ShelleyTx Mary
-    TxT Alonzo = AlonzoTx Alonzo
-    TxT Babbage = AlonzoTx Babbage
-    TxT Conway = AlonzoTx Conway
+    TxT Shelley = Core.Tx Shelley
+    TxT Allegra = Core.Tx Allegra
+    TxT Mary = Core.Tx Mary
+    TxT Alonzo = Core.Tx Alonzo
+    TxT Babbage = Core.Tx Babbage
+    TxT Conway = Core.Tx Conway
 
 -- | A tx in any era
 newtype Tx era = Tx {unTx :: TxT era}
 
 deriving instance Show (TxT era) => Show (Tx era)
 deriving instance Eq (TxT era) => Eq (Tx era)
+deriving instance Ord (TxT era) => Ord (Tx era)

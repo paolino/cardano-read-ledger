@@ -17,14 +17,7 @@ where
 import Prelude
 
 import Cardano.Crypto.Hashing qualified as Byron
-import Cardano.Ledger.Api qualified as L
-import Cardano.Ledger.Binary
-    ( EncCBOR
-    , EncCBORGroup
-    )
-import Cardano.Ledger.Core
-    ( EraSegWits (..)
-    )
+
 import Cardano.Ledger.Hashes
     ( EraIndependentBlockHeader
     )
@@ -108,11 +101,7 @@ getEraHeaderHash = case theEra @era of
     Conway -> \(Block block) -> HeaderHash $ getHeaderHashShelley block
 
 getHeaderHashShelley
-    :: ( Shelley.ProtocolHeaderSupportsEnvelope (praos StandardCrypto)
-       , L.Era era
-       , EncCBORGroup (TxSeq era)
-       , EncCBOR (Shelley.ShelleyProtocolHeader (praos StandardCrypto))
-       )
+    :: (Shelley.ProtocolHeaderSupportsEnvelope (praos StandardCrypto))
     => O.ShelleyBlock (praos StandardCrypto) era
     -> ShelleyHash
 getHeaderHashShelley
@@ -165,11 +154,7 @@ type family PrevHeaderHashT era where
 newtype PrevHeaderHash era = PrevHeaderHash (PrevHeaderHashT era)
 
 getPrevHeaderHashShelley
-    :: ( L.Era era
-       , EncCBORGroup (TxSeq era)
-       , EncCBOR (Shelley.ShelleyProtocolHeader proto)
-       , Shelley.ProtocolHeaderSupportsEnvelope proto
-       )
+    :: (Shelley.ProtocolHeaderSupportsEnvelope proto)
     => O.ShelleyBlock proto era
     -> PrevHash
 getPrevHeaderHashShelley (O.ShelleyBlock (Shelley.Block header _) _) =
